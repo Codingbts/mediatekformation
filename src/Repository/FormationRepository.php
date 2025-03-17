@@ -16,15 +16,15 @@ class FormationRepository extends ServiceEntityRepository
         parent::__construct($registry, Formation::class);
     }
 
-    public function add(Formation $entity): void
+    public function add(Formation $formation): void
     {
-        $this->getEntityManager()->persist($entity);
+        $this->getEntityManager()->persist($formation);
         $this->getEntityManager()->flush();
     }
 
-    public function remove(Formation $entity): void
+    public function remove(Formation $formation): void
     {
-        $this->getEntityManager()->remove($entity);
+        $this->getEntityManager()->remove($formation);
         $this->getEntityManager()->flush();
     }
 

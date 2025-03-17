@@ -1,0 +1,27 @@
+{% extends "base.html.twig" %}
+
+{% block title %}{% endblock %}
+{% block stylesheets %}{% endblock %}
+{% block top %}
+    <div class="container">
+        <!-- titre -->
+        <div class="text-left">
+            <img src="{{ app.request.getBasePath()~'/banniere.jpg' }}" alt="bannière" >
+        </div>
+        <h1 class="text-center">Gestion des formations</h1><br/>
+        <br/>
+    </div>
+{% endblock %}
+{% block body %}{% endblock %}
+{% block footer %}
+    <div class="container text-center">
+        <footer>
+            <hr>
+            <p><small><em>
+                Consultez nos <a class="link-secondary" href="{{ path('cgu') }}">Conditions Générales d'Utilisation</a>
+            </em></small></p>
+            
+        </footer>
+    </div>
+{% endblock %}
+{% block javascripts %}{% endblock %}{# empty Twig template #}
