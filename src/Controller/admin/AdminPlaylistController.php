@@ -98,7 +98,6 @@ class AdminPlaylistController extends AbstractController {
         $playlist = $this->playlistRepository->find($id);
 
         if (!$playlist) {
-
             $this->addFlash('error', 'Aucune playlist trouvée');
             return $this->redirectToRoute("admin.playlists");
         }

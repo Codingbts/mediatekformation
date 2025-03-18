@@ -1,0 +1,46 @@
+{% extends "baseadmin.html.twig" %}
+
+{% block body %}
+    {% for message in app.flashes('error') %}
+        <div class="alert alert-danger">
+            {{ message }}
+        </div>
+    {% endfor %}
+    <div class="text-center">
+        <h3>Gestion des catégories</h3>
+    </div>
+    <form class="form-inline mt-1" method="POST" action="{{ path('admin.categories.ajout', {champ:'name'}) }}">
+        <div class="form-group mr-1 mb-2">
+            <input type="text" class="sm" name="name">
+            <input type="hidden" name="_token" value="{{ csrf_token('filtre_categories') }}">
+            <button type="submit" class="btn btn-info mb-2 btn-sm">Ajouter</button>
+        </div>
+    </form>   
+    <table class="table table-striped">
+        <caption>Liste des catégories :</caption>
+        <thead>
+            <tr>
+                <th class="text-left align-top" scope="col">
+                    Nom
+                </th>
+                <th class="text-left align-top" scope="col">
+                    Action
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for categorie in categories %}
+            <tr>
+                <td class="text-left">
+                    {{ categorie.name }}
+                </td>            
+                <td>
+                    {% for i in 0..7 %}&nbsp;{% endfor %}<a href='{{ path('admin.categories.suppr', {id:categorie.id}) }}' class='btn btn-danger' onclick="return confirm('Êtes-vous sûr de vouloir supprimer {{ categorie.name }} ?')">Supprimer</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+
+{% endblock %}

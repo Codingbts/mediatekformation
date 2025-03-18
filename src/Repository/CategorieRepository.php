@@ -45,4 +45,13 @@ class CategorieRepository extends ServiceEntityRepository
                 ->getResult();
     }
     
+    public function findOneByName(string $name): array
+    {
+        return $this->createQueryBuilder('c')
+                ->where('c.name = :name')
+                ->setParameter('name', $name)
+                ->getQuery()
+                ->getResult();
+    }
+    
 }
