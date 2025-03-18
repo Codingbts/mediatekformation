@@ -29,6 +29,7 @@ class FormationsController extends AbstractController
     private $categorieRepository;
     
     const FORMATIONPAGE = "pages/formations.html.twig";
+    const FORMATIONPAGESHOW = "pages/formation.html.twig";
     
     public function __construct(FormationRepository $formationRepository, CategorieRepository $categorieRepository)
     {
@@ -77,8 +78,8 @@ class FormationsController extends AbstractController
     public function showOne($id): Response
     {
         $formation = $this->formationRepository->find($id);
-        return $this->render(self::FORMATIONPAGE, [
-            'formation' => $formation
+        return $this->render(self::FORMATIONPAGESHOW, [
+            'formation' => $formation,
         ]);
     }
     
