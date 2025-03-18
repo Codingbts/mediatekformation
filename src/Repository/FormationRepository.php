@@ -18,12 +18,29 @@ class FormationRepository extends ServiceEntityRepository
 
     public function add(Formation $formation): void
     {
+        $playlist = $formation->getPlaylist();
+
+      
+        if ($playlist !== null) {
+            $playlist->setFormationNb($playlist->getFormationNb() + 1);
+             $this->getEntityManager()->persist($playlist); // Sauvegarde la playlist mise à jour
+        }
+
         $this->getEntityManager()->persist($formation);
         $this->getEntityManager()->flush();
     }
 
     public function remove(Formation $formation): void
     {
+        
+        $playlist = $formation->getPlaylist();
+
+        
+        if ($playlist !== null) {
+            $playlist->setFormationNb($playlist->getFormationNb() - 1);
+            $this->getEntityManager()->persist($playlist); 
+        }
+
         $this->getEntityManager()->remove($formation);
         $this->getEntityManager()->flush();
     }
@@ -111,5 +128,14 @@ class FormationRepository extends ServiceEntityRepository
                 ->getQuery()
                 ->getResult();
     }
+    
+    public function findByPlaylist(Playlist $playlist): array
+{
+    return $this->createQueryBuilder('f')
+        ->where('f.playlist = :playlist')
+        ->setParameter('playlist', $playlist)
+        ->getQuery()
+        ->getResult();
+}
     
 }
