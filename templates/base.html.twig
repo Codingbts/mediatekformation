@@ -8,6 +8,12 @@
         {% block javascripts %}{% endblock %}
     </head>
     <body>
+        <div class="container text-end mt-5" >
+            {% if (app.user) %}
+                <a href="{{ path('logout') }}" class="btn btn-danger">Se déconnecter</a>
+            
+            {% endif %}
+        </div>
         <!-- entête -->
         {% block top %}{% endblock %}
         <!-- corps -->
