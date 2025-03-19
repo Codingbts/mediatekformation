@@ -7,7 +7,7 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<Categorie>
+ * Repository pour l'entité Categorie.
  */
 class CategorieRepository extends ServiceEntityRepository
 {
@@ -16,12 +16,20 @@ class CategorieRepository extends ServiceEntityRepository
         parent::__construct($registry, Categorie::class);
     }
 
+    /**
+     * Ajoute une catégorie à la base de données.
+     * @param Categorie $entity
+     */
     public function add(Categorie $entity): void
     {
         $this->getEntityManager()->persist($entity);
         $this->getEntityManager()->flush();
     }
 
+    /**
+     * Supprime une catégorie de la base de données.
+     * @param Categorie $entity
+     */
     public function remove(Categorie $entity): void
     {
         $this->getEntityManager()->remove($entity);
@@ -29,8 +37,8 @@ class CategorieRepository extends ServiceEntityRepository
     }
     
     /**
-     * Retourne la liste des catégories des formations d'une playlist
-     * @param type $idPlaylist
+     * Retourne la liste des catégories des formations d'une playlist.
+     * @param int $idPlaylist ID de la playlist
      * @return array
      */
     public function findAllForOnePlaylist($idPlaylist): array
@@ -45,6 +53,11 @@ class CategorieRepository extends ServiceEntityRepository
                 ->getResult();
     }
     
+    /**
+     * Recherche une catégorie par son nom.
+     * @param string $name Nom de la catégorie
+     * @return array
+     */
     public function findOneByName(string $name): array
     {
         return $this->createQueryBuilder('c')
@@ -53,5 +66,4 @@ class CategorieRepository extends ServiceEntityRepository
                 ->getQuery()
                 ->getResult();
     }
-    
 }

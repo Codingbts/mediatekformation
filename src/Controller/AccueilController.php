@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Controller;
 
 use App\Repository\FormationRepository;
@@ -7,27 +8,31 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * Description of AccueilController
+ * Contrôleur de la page d'accueil.
  *
- * @author emds
+ * Ce contrôleur gère l'affichage de la page d'accueil et des CGU.
  */
 class AccueilController extends AbstractController
 {
-    
     /**
+     * Repository des formations.
      * @var FormationRepository
      */
     private $repository;
-    
+
     /**
-     *
+     * Constructeur.
      * @param FormationRepository $repository
      */
     public function __construct(FormationRepository $repository)
     {
         $this->repository = $repository;
     }
-    
+
+    /**
+     * Affiche la page d'accueil.
+     * @return Response
+     */
     #[Route('/', name: 'accueil')]
     public function index(): Response
     {
@@ -36,7 +41,11 @@ class AccueilController extends AbstractController
             'formations' => $formations
         ]);
     }
-    
+
+    /**
+     * Affiche les Conditions Générales d'Utilisation (CGU).
+     * @return Response
+     */
     #[Route('/cgu', name: 'cgu')]
     public function cgu(): Response
     {

@@ -11,34 +11,48 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * Description of PlaylistsController
+ * Contrôleur des playlists côté utilisateur.
  *
- * @author emds
+ * Ce contrôleur permet de lister, trier, rechercher et afficher les playlists.
  */
 class PlaylistsController extends AbstractController
 {
-
     /**
-     *
+     * Repository des playlists.
      * @var PlaylistRepository
      */
     private $playlistRepository;
 
     /**
-     *
+     * Repository des formations.
      * @var FormationRepository
      */
     private $formationRepository;
 
     /**
-     *
+     * Repository des catégories.
      * @var CategorieRepository
      */
     private $categorieRepository;
-    
-    const PAGEPLAYLISTS="pages/playlists.html.twig";
-    const ONEPAGEPLAYLIST="pages/playlist.html.twig";
 
+    /**
+     * Chemin vers la page des playlists.
+     * @var string
+     */
+    const PAGEPLAYLISTS = "pages/playlists.html.twig";
+
+    /**
+     * Chemin vers la page d'une playlist.
+     * @var string
+     */
+    const ONEPAGEPLAYLIST = "pages/playlist.html.twig";
+
+    /**
+     * Constructeur.
+     * @param PlaylistRepository $playlistRepository
+     * @param CategorieRepository $categorieRepository
+     * @param FormationRepository $formationRespository
+     */
     public function __construct(
         PlaylistRepository $playlistRepository,
         CategorieRepository $categorieRepository,
@@ -50,7 +64,7 @@ class PlaylistsController extends AbstractController
     }
 
     /**
-     * @Route("/playlists", name="playlists")
+     * Affiche la liste des playlists.
      * @return Response
      */
     #[Route('/playlists', name: 'playlists')]
@@ -59,27 +73,40 @@ class PlaylistsController extends AbstractController
         $playlists = $this->playlistRepository->findAllOrderByName('ASC');
         $categories = $this->categorieRepository->findAll();
         return $this->render(self::PAGEPLAYLISTS, [
-                    'playlists' => $playlists,
-                    'categories' => $categories
+            'playlists' => $playlists,
+            'categories' => $categories
         ]);
     }
 
+    /**
+     * Trie les playlists par champ et ordre.
+     * @param string $champ Champ de tri
+     * @param string $ordre Ordre de tri (ASC/DESC)
+     * @return Response
+     */
     #[Route('/playlists/tri/{champ}/{ordre}', name: 'playlists.sort')]
     public function sort($champ, $ordre): Response
     {
-        if ($champ==="name") {
+        if ($champ === "name") {
             $playlists = $this->playlistRepository->findAllOrderByName($ordre);
-        }elseif ($champ==="formations") {
+        } elseif ($champ === "formations") {
             $playlists = $this->playlistRepository->findAllOrderByFormationNb($ordre);
         }
 
         $categories = $this->categorieRepository->findAll();
         return $this->render(self::PAGEPLAYLISTS, [
-                    'playlists' => $playlists,
-                    'categories' => $categories
+            'playlists' => $playlists,
+            'categories' => $categories
         ]);
     }
 
+    /**
+     * Recherche des playlists contenant une valeur dans un champ.
+     * @param string $champ Champ de recherche
+     * @param Request $request Requête HTTP
+     * @param string $table Table associée (optionnel)
+     * @return Response
+     */
     #[Route('/playlists/recherche/{champ}/{table}', name: 'playlists.findallcontain')]
     public function findAllContain($champ, Request $request, $table = ""): Response
     {
@@ -87,13 +114,18 @@ class PlaylistsController extends AbstractController
         $playlists = $this->playlistRepository->findByContainValue($champ, $valeur, $table);
         $categories = $this->categorieRepository->findAll();
         return $this->render(self::PAGEPLAYLISTS, [
-                    'playlists' => $playlists,
-                    'categories' => $categories,
-                    'valeur' => $valeur,
-                    'table' => $table
+            'playlists' => $playlists,
+            'categories' => $categories,
+            'valeur' => $valeur,
+            'table' => $table
         ]);
     }
 
+    /**
+     * Affiche une playlist spécifique.
+     * @param int $id ID de la playlist
+     * @return Response
+     */
     #[Route('/playlists/playlist/{id}', name: 'playlists.showone')]
     public function showOne($id): Response
     {
@@ -101,9 +133,9 @@ class PlaylistsController extends AbstractController
         $playlistCategories = $this->categorieRepository->findAllForOnePlaylist($id);
         $playlistFormations = $this->formationRepository->findAllForOnePlaylist($id);
         return $this->render(self::ONEPAGEPLAYLIST, [
-                'playlist' => $playlist,
-                'playlistcategories' => $playlistCategories,
-                'playlistformations' => $playlistFormations,
+            'playlist' => $playlist,
+            'playlistcategories' => $playlistCategories,
+            'playlistformations' => $playlistFormations,
         ]);
     }
 }

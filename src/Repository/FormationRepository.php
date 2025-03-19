@@ -3,11 +3,12 @@
 namespace App\Repository;
 
 use App\Entity\Formation;
+use App\Entity\Playlist;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<Formation>
+ * Repository pour l'entité Formation.
  */
 class FormationRepository extends ServiceEntityRepository
 {
@@ -16,29 +17,34 @@ class FormationRepository extends ServiceEntityRepository
         parent::__construct($registry, Formation::class);
     }
 
+    /**
+     * Ajoute une formation à la base de données.
+     * @param Formation $formation
+     */
     public function add(Formation $formation): void
     {
         $playlist = $formation->getPlaylist();
 
-      
         if ($playlist !== null) {
             $playlist->setFormationNb($playlist->getFormationNb() + 1);
-             $this->getEntityManager()->persist($playlist); // Sauvegarde la playlist mise à jour
+            $this->getEntityManager()->persist($playlist);
         }
 
         $this->getEntityManager()->persist($formation);
         $this->getEntityManager()->flush();
     }
 
+    /**
+     * Supprime une formation de la base de données.
+     * @param Formation $formation
+     */
     public function remove(Formation $formation): void
     {
-        
         $playlist = $formation->getPlaylist();
 
-        
         if ($playlist !== null) {
             $playlist->setFormationNb($playlist->getFormationNb() - 1);
-            $this->getEntityManager()->persist($playlist); 
+            $this->getEntityManager()->persist($playlist);
         }
 
         $this->getEntityManager()->remove($formation);
@@ -46,65 +52,64 @@ class FormationRepository extends ServiceEntityRepository
     }
 
     /**
-     * Retourne toutes les formations triées sur un champ
-     * @param type $champ
-     * @param type $ordre
-     * @param type $table si $champ dans une autre table
+     * Retourne toutes les formations triées sur un champ.
+     * @param string $champ Champ de tri
+     * @param string $ordre Ordre de tri (ASC/DESC)
+     * @param string $table Table associée (optionnel)
      * @return Formation[]
      */
-    public function findAllOrderBy($champ, $ordre, $table=""): array
+    public function findAllOrderBy($champ, $ordre, $table = ""): array
     {
-        if ($table=="") {
+        if ($table == "") {
             return $this->createQueryBuilder('f')
-                    ->orderBy('f.'.$champ, $ordre)
+                    ->orderBy('f.' . $champ, $ordre)
                     ->getQuery()
                     ->getResult();
-        }else {
+        } else {
             return $this->createQueryBuilder('f')
-                    ->join('f.'.$table, 't')
-                    ->orderBy('t.'.$champ, $ordre)
+                    ->join('f.' . $table, 't')
+                    ->orderBy('t.' . $champ, $ordre)
                     ->getQuery()
                     ->getResult();
         }
     }
 
     /**
-     * Enregistrements dont un champ contient une valeur
-     * ou tous les enregistrements si la valeur est vide
-     * @param type $champ
-     * @param type $valeur
-     * @param type $table si $champ dans une autre table
+     * Recherche des formations contenant une valeur dans un champ.
+     * @param string $champ Champ de recherche
+     * @param string $valeur Valeur à rechercher
+     * @param string $table Table associée (optionnel)
      * @return Formation[]
      */
-    public function findByContainValue($champ, $valeur, $table=""): array
+    public function findByContainValue($champ, $valeur, $table = ""): array
     {
-        if ($valeur=="") {
+        if ($valeur == "") {
             return $this->findAll();
         }
-        if ($table=="") {
+        if ($table == "") {
             return $this->createQueryBuilder('f')
-                    ->where('f.'.$champ.' LIKE :valeur')
+                    ->where('f.' . $champ . ' LIKE :valeur')
                     ->orderBy('f.publishedAt', 'DESC')
-                    ->setParameter('valeur', '%'.$valeur.'%')
+                    ->setParameter('valeur', '%' . $valeur . '%')
                     ->getQuery()
                     ->getResult();
-        }else {
+        } else {
             return $this->createQueryBuilder('f')
-                    ->join('f.'.$table, 't')
-                    ->where('t.'.$champ.' LIKE :valeur')
+                    ->join('f.' . $table, 't')
+                    ->where('t.' . $champ . ' LIKE :valeur')
                     ->orderBy('f.publishedAt', 'DESC')
-                    ->setParameter('valeur', '%'.$valeur.'%')
+                    ->setParameter('valeur', '%' . $valeur . '%')
                     ->getQuery()
                     ->getResult();
         }
     }
     
     /**
-     * Retourne les n formations les plus récentes
-     * @param type $nb
+     * Retourne les n formations les plus récentes.
+     * @param int $nb Nombre de formations à retourner
      * @return Formation[]
      */
-    public function findAllLasted($nb) : array
+    public function findAllLasted($nb): array
     {
         return $this->createQueryBuilder('f')
                 ->orderBy('f.publishedAt', 'DESC')
@@ -114,8 +119,8 @@ class FormationRepository extends ServiceEntityRepository
     }
     
     /**
-     * Retourne la liste des formations d'une playlist
-     * @param type $idPlaylist
+     * Retourne la liste des formations d'une playlist.
+     * @param int $idPlaylist ID de la playlist
      * @return array
      */
     public function findAllForOnePlaylist($idPlaylist): array
@@ -129,13 +134,17 @@ class FormationRepository extends ServiceEntityRepository
                 ->getResult();
     }
     
+    /**
+     * Retourne les formations d'une playlist spécifique.
+     * @param Playlist $playlist
+     * @return array
+     */
     public function findByPlaylist(Playlist $playlist): array
-{
-    return $this->createQueryBuilder('f')
-        ->where('f.playlist = :playlist')
-        ->setParameter('playlist', $playlist)
-        ->getQuery()
-        ->getResult();
-}
-    
+    {
+        return $this->createQueryBuilder('f')
+            ->where('f.playlist = :playlist')
+            ->setParameter('playlist', $playlist)
+            ->getQuery()
+            ->getResult();
+    }
 }
