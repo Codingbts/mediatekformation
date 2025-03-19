@@ -25,9 +25,16 @@ class LoginController extends AbstractController
         $error = $authenticationUtils->getLastAuthenticationError();
         $lastUsername = $authenticationUtils->getLastUsername();
         
+        $errormsg="";
+        
+        if ($error != null) {
+            $errormsg = 'Le login ou le mot de passe est incorrect, veuillez réessayer.';
+        }
+        
+        
         return $this->render('login/index.html.twig', [
             'last_username' => $lastUsername,
-            'error' => $error
+            'error' => $errormsg,
         ]);
     }
 

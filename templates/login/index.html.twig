@@ -2,10 +2,10 @@
 
 {% block body %}
     {% if error %}
-        <div>{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+        <div class="alert alert-danger">{{ error }}</div>
     {% endif %}
 
-    <div style="height: 70vh; display:flex; flex-direction: column; justify-content: center; align-items: center;">
+    <div style="height: 40vh; display:flex; flex-direction: column; justify-content: center; align-items: center;">
     <form action="{{ path('app_login') }}" method="post">
         <h3>CONNEXION</h3><br/>
         <label for="username">Login:</label>
