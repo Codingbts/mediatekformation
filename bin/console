@@ -4,6 +4,8 @@
 use App\Kernel;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 
+$port = getenv('PORT') ?: 3000;
+
 if (!is_dir(dirname(__DIR__).'/vendor')) {
     throw new LogicException('Dependencies are missing. Try running "composer install".');
 }
@@ -19,3 +21,4 @@ return function (array $context) {
 
     return new Application($kernel);
 };
+
