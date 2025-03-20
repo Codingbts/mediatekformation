@@ -21,3 +21,5 @@
 ###> symfony/asset-mapper ###
 /public/assets/
 ###< symfony/asset-mapper ###
+.env
+.env.test
