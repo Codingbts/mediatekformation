@@ -17,6 +17,9 @@ RUN a2enmod rewrite
 # Copiez les fichiers de votre application dans le conteneur
 COPY . /var/www/html
 
+# Copiez le fichier .env dans le conteneur
+COPY .env /var/www/html/.env
+
 # Définissez le répertoire de travail
 WORKDIR /var/www/html
 
